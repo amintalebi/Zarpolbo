@@ -8,163 +8,135 @@
     <title>Home</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- google maps api -->
-    <script src="http://maps.google.com/maps/api/js?sensor=false"
-            type="text/javascript"></script>
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link href="{% static "style.css" %}" type="text/css" rel="stylesheet">
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
-{#<nav class="navbar navbar-inverse">#}
-{#    <div class="container-fluid">#}
-{##}
-{#        <div class="navbar-header">#}
-{#            <a class="navbar-brand" href="#">Cafe Yab</a>#}
-{#        </div>#}
-{#        <ul class="nav navbar-nav">#}
-{#            <li class="active"><a href='{% url 'cafe:index' %}'>Home</a></li>#}
-{#        </ul>#}
-{#        <ul>#}
-{#            #}
-{#        </ul>#}
-{##}
-{#        <ul class="nav navbar-nav navbar-right">#}
-{#            <li><a href="/account/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>#}
-{#            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>#}
-{#        </ul>#}
-{#    </div>#}
-{#</nav>#}
-<div class="navbar navbar-inverse navbar-static-top" role="navigation">
 
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" rel="home" href="/" title="Aahan Krish's Blog - Homepage">ITSMEEE</a>
-    </div>
+    <script  type="text/javascript" src="{% static 'typeahead.bundle.js' %}"></script>
 
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <script type="text/javascript" >
+    $(document).ready(function(){
+    // Defining the local dataset
+        let cafes = [
+            {% for cafe in cafes_list %}
+                "{{ cafe.name|safe }}"{%  if not forloop.last %}, {% endif %}
+            {% endfor %}
+        ];
 
-        <ul class="nav navbar-nav">
-            <li><a href="/topic/notes/">/notes</a></li>
-            <li><a href="/topic/dev/">/dev</a></li>
-            <li><a href="/topic/good-reads/">/good-reads</a></li>
-            <li><a href="/topic/art/">/art</a></li>
-            <li><a href="/topic/bookmarks/">/bookmarks</a></li>
-            <li><a href="/all-topics/">/all</a></li>
-        </ul>
-
-        <div class="col-sm-3 col-md-3 pull-right">
-        <form class="navbar-form" role="search">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
-            <div class="input-group-btn">
-                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-            </div>
-        </div>
-        </form>
-        </div>
-
-    </div>
-</div>
-{#<script type="text/javascript">#}
-{#    function makeUL(array) {#}
-{#        // Create the list element:#}
-{#        var list = document.createElement('ul');#}
-{##}
-{#        for (var i = 0; i < array.length; i++) {#}
-{#            // Create the list item:#}
-{#            var item = document.createElement('li');#}
-{##}
-{#            // Set its contents:#}
-{#            item.appendChild(document.createTextNode(array[i][0]))#}
-{#            item.appendChild(document.createTextNode(array[i][1]));#}
-{#            var li_image = document.createElement('img');#}
-{#            li_image.src = array[i][2];#}
-{#            li_image.className = "image";#}
-{#            item.appendChild(li_image);#}
-{##}
-{#            // Add it to the list:#}
-{#            list.appendChild(item);#}
-{#        }#}
-{##}
-{#        // Finally, return the constructed list:#}
-{#        return list;#}
-{#    }#}
-{#    var locations = [#}
-{#        {% for cafe in cafes_list %}#}
-{#            [`{{ cafe.name }}`, `{{ cafe.description }}`, `{{ cafe.main_image_url }}`],#}
-{#        {% endfor %}#}
-{#    ];#}
-{##}
-{#    document.getElementById("list").appendChild(makeUL(locations));#}
-{##}
-{#</script>#}
-
-<div  style="clear:both ; position: fixed ; right: 0px ; width: 48% ; height: 80%" >
-<div id="mapp" class="fixx" style="position: fixed; right: 0px; width: 100%; height: 100%"></div>
-<script type="text/javascript">
-
-    var latSum = 0, lngSum = 0, cnt = 0;
-
-    {% for cafe in cafes_list %}
-        latSum += {{ cafe.latitude }};
-        lngSum += {{ cafe.longitude }};
-        cnt++;
-    {% endfor %}
-
-
-
-    var locations = [
-        {% for cafe in cafes_list %}
-            ['{{ cafe.name}}', {{ cafe.latitude }}, {{ cafe.longitude }}],
-        {% endfor %}
-    ];
-
-    var map = new google.maps.Map(document.getElementById('mapp'), {
-        zoom: 10,
-        center: new google.maps.LatLng(latSum / cnt, lngSum / cnt),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
-
-    var infowindow = new google.maps.InfoWindow();
-
-    var marker, i;
-
-    for (i = 0; i < locations.length; i++) {
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            map: map
+        // Constructing the suggestion engine
+        cafes = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: cafes
         });
 
-        google.maps.event.addListener(marker, 'click', (function (marker, i) {
-            return function () {
-                infowindow.setContent(locations[i][0]);
-                infowindow.open(map, marker);
-            }
-        })(marker, i));
-    }
-</script></div>
-<div class="container">
+        // Initializing the typeahead
+    $('.typeahead').typeahead({
+        hint: true,
+        highlight: true, /* Enable substring highlighting */
+        minLength: 1 /* Specify minimum characters required for showing result */
+    },
+    {
+        name: 'cafes',
+        source: cafes
+    });
+});
+</script>
+
+
+</head>
+<body>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Cafe Yab</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li class="active"><a href='{% url 'cafe:index' %}'>Home</a></li>
+        </ul>
+
+
+        <form id="search-form" class="navbar-form navbar-left" method="post" action="{% url 'cafe:search' %}">
+            <div class="form-group">
+                <input type="text" class="typeahead tt-query"  placeholder="Search" id="search-input" name="q"
+                       autocomplete="off" spellcheck="false"/>
+            </div>
+            <input type="submit" class="btn btn-default" value="submit"/>
+        </form>
+
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/account/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+
+    </div>
+</nav>
+
+
+<div style="clear:both ; position: fixed ; right: 0px ; width: 48% ; height: 80%">
+    <div id="mapp" class="fixx" style="position: fixed; right: 0px; width: 100%; height: 100%"></div>
+    <script type="text/javascript">
+
+        var latSum = 0, lngSum = 0, cnt = 0;
+
+        {% for cafe in cafes_list %}
+            latSum += {{ cafe.latitude }};
+            lngSum += {{ cafe.longitude }};
+            cnt++;
+        {% endfor %}
+
+
+
+        var locations = [
+            {% for cafe in cafes_list %}
+                ['{{ cafe.name}}', {{ cafe.latitude }}, {{ cafe.longitude }}],
+            {% endfor %}
+        ];
+
+        var map = new google.maps.Map(document.getElementById('mapp'), {
+            zoom: 10,
+            center: new google.maps.LatLng(latSum / cnt, lngSum / cnt),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map
+            });
+
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                return function () {
+                    infowindow.setContent(locations[i][0]);
+                    infowindow.open(map, marker);
+                }
+            })(marker, i));
+        }
+    </script>
+<script src="{% static 'script.js' %}"></script>
+</div>
+<div class="container" id="container">
     {% for cafe in cafes_list %}
         <h1 class="text">{{ cafe.name }}</h1>
         <img src="{{ cafe.main_image_url }}" alt="Avatar" class="image">
-    <div class="middle">
-        <div class="h-text">{{ cafe.description }}</div>
-    </div>
+        <div class="middle">
+            <div class="h-text">{{ cafe.description }}</div>
+        </div>
         <br/>
     {% endfor %}
 </div>
-
-
 </body>
 </html>
 

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from zarpolbo import cafe
+from Cafe.models import Cafe
 
 
-admin.site.register(cafe)
+admin.site.register(Cafe)

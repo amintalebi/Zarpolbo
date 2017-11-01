@@ -6,4 +6,6 @@ from django.views.generic import FormView
 
 class RegisterView(FormView):
     template_name = 'register.html'
-    # form_class =
+    form_class = RegisterForm
+
+

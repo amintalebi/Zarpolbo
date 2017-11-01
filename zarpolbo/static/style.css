@@ -1,4 +1,48 @@
-#map {
+
+.fixx{
     float: right;
-    padding: 200px;
+    padding: 20%;
+    position: fixed;
+    margin-right: 5%;
+    right: 0;
+    height: 40%;
+    width: 40%;
+
+}
+.container {
+    position: relative;
+    width: 50%;
+    float: left;
+}
+
+.image {
+  opacity: 1;
+  display: block;
+    width: 200px;
+    border-radius: 2px;
+  height: 200px;
+  transition: .5s ease;
+  backface-visibility: hidden;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 1;
+  position: relative;
+}
+
+.text {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  padding: 16px 50px;
+    position: relative;
+    border-radius: 5px;
+}
+
+.h-text{
+    font-size: 16px;
+    /*padding: 16px 32px;*/
+    position: relative;
+    margin-top: 2%;
 }

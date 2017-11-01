@@ -22,6 +22,7 @@
 <body>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
+
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Cafe Yab</a>
         </div>
@@ -35,44 +36,46 @@
     </div>
 </nav>
 
-<div id="list"></div>
-<script type="text/javascript">
-    function makeUL(array) {
-        // Create the list element:
-        var list = document.createElement('ul');
+{#<script type="text/javascript">#}
+{#    function makeUL(array) {#}
+{#        // Create the list element:#}
+{#        var list = document.createElement('ul');#}
+{##}
+{#        for (var i = 0; i < array.length; i++) {#}
+{#            // Create the list item:#}
+{#            var item = document.createElement('li');#}
+{##}
+{#            // Set its contents:#}
+{#            item.appendChild(document.createTextNode(array[i][0]))#}
+{#            item.appendChild(document.createTextNode(array[i][1]));#}
+{#            var li_image = document.createElement('img');#}
+{#            li_image.src = array[i][2];#}
+{#            li_image.className = "image";#}
+{#            item.appendChild(li_image);#}
+{##}
+{#            // Add it to the list:#}
+{#            list.appendChild(item);#}
+{#        }#}
+{##}
+{#        // Finally, return the constructed list:#}
+{#        return list;#}
+{#    }#}
+{#    var locations = [#}
+{#        {% for cafe in cafes_list %}#}
+{#            [`{{ cafe.name }}`, `{{ cafe.description }}`, `{{ cafe.main_image_url }}`],#}
+{#        {% endfor %}#}
+{#    ];#}
+{##}
+{#    document.getElementById("list").appendChild(makeUL(locations));#}
+{##}
+{#</script>#}
 
-        for (var i = 0; i < array.length; i++) {
-            // Create the list item:
-            var item = document.createElement('li');
-
-            // Set its contents:
-            item.appendChild(document.createTextNode(array[i][0]))
-            item.appendChild(document.createTextNode(array[i][1]));
-            var li_image = document.createElement('img');
-            li_image.src = array[i][2];
-            item.appendChild(li_image);
-
-            // Add it to the list:
-            list.appendChild(item);
-        }
-
-        // Finally, return the constructed list:
-        return list;
-    }
-    var locations = [
-        {% for cafe in cafes_list %}
-            [`{{ cafe.name }}`, `{{ cafe.description }}`, `{{ cafe.main_image_url }}`],
-        {% endfor %}
-    ];
-
-    document.getElementById("list").appendChild(makeUL(locations));
-
-</script>
-
-<div id="map" style="width: 500px; height: 400px"></div>
+<div  style="clear:both ; position: fixed ; right: 0px ; width: 48% ; height: 80%" >
+<div id="mapp" class="fixx" style="position: fixed; right: 0px; width: 100%; height: 100%"></div>
 <script type="text/javascript">
 
     var latSum = 0, lngSum = 0, cnt = 0;
+
 
     {% for cafe in cafes_list %}
         latSum += {{ cafe.latitude }};
@@ -80,13 +83,15 @@
         cnt++;
     {% endfor %}
 
+
+
     var locations = [
         {% for cafe in cafes_list %}
-            ['{{ cafe.name }}', {{ cafe.latitude }}, {{ cafe.longitude }}],
+            ['{{ cafe.name}}', {{ cafe.latitude }}, {{ cafe.longitude }}],
         {% endfor %}
     ];
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    var map = new google.maps.Map(document.getElementById('mapp'), {
         zoom: 10,
         center: new google.maps.LatLng(latSum / cnt, lngSum / cnt),
         mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -109,7 +114,17 @@
             }
         })(marker, i));
     }
-</script>
+</script></div>
+<div class="container">
+    {% for cafe in cafes_list %}
+        <h1 class="text">{{ cafe.name }}</h1>
+        <img src="{{ cafe.main_image_url }}" alt="Avatar" class="image">
+    <div class="middle">
+        <div class="h-text">{{ cafe.description }}</div>
+    </div>
+        <br/>
+    {% endfor %}
+</div>
 
 
 </body>

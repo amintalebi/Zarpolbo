@@ -19,4 +19,5 @@ def index(request):
     return render(request, 'cafe/index.html', context)
 
 
-
+def search(request):
+    pass

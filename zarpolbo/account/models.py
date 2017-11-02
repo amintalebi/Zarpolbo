@@ -5,7 +5,7 @@ from django.db import models
 
 
 class UserInfo(models.Model):
-    user = models.ForeignKey(User, related_name='additionals')
+    user = models.OneToOneField(to=User, related_name='profile')
     profile_picture = models.ImageField(null=True, blank=True)
 
     def __str__(self):

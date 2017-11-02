@@ -42,10 +42,12 @@
 
         <ul class="nav navbar-nav navbar-right">
             {% if request.user.is_authenticated %}
-                <li>
-                    <a href="/account/edit_profile/"><span
-                            class="glyphicon glyphicon-user"></span>Edit Profile</a>
-                </li>
+                {%  if request.user.username == user.username %}
+                    <li>
+                        <a href="/account/edit_profile/"><span
+                                class="glyphicon glyphicon-user"></span> Edit Profile</a>
+                    </li>
+                {% endif %}
                 <li><a href="/account/profile/{{ request.user.username }}/"><span
                         class="glyphicon glyphicon-user"></span> Profile</a></li>
                 <li><a href="/account/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>

@@ -31,7 +31,8 @@ def register_view(request):
             if User.objects.filter(username=username).count() != 0:
                 form.add_error('username', 'A user with this username already exists.')
             else:
-                User.objects.create_user(username=username, email=email, password=password, first_name=name)
+                user = User.objects.create_user(username=username, email=email, password=password, first_name=name)
+                UserInfo.objects.create(user=user)
                 return redirect('/account/login/')
     else:
         form = RegisterForm()
@@ -62,38 +63,39 @@ def logout_view(request):
 def profile(request, username):
     template_name = 'account/profile.html'
 
-    if User.objects.filter(username__contains=username).count() == 0:
+    if User.objects.filter(username=username).count() == 0:
         return redirect("/cafe/")
     else:
-        user  = User.objects.filter(username__contains=username).first()
+        user = User.objects.filter(username=username).first()
 
     context = {
-        'user' : user
+        'user': user
     }
     return render(request, template_name, context)
 
 
-class UpdateUserInfoView(LoginRequiredMixin, UpdateView):
-    model = UserInfo
-    form_class = UserInfoForm
-    template_name = 'account/edit_profile.html'
-    success_url = '/cafe/'
-
-    def get_object(self, queryset=None):
-        if self.request.user.additionals.count() > 0:
-            return self.request.user.additionals.all()[0]
-        return None
-
 class UserInfoView(LoginRequiredMixin, FormView):
     form_class = UserInfoForm
     template_name = 'account/edit_profile.html'
+    success_url = '/account/edit_profile/'
+    login_url = '/account/login/'
 
     def get_initial(self):
         initial = super(UserInfoView, self).get_initial()
-        if self.request.user.additionals.count() > 0:
-            user_info = self.request.user.additionals.all()[0]
-            initial['name'] = user_info.name
-            initial['email'] = user_info.email
-            initial['password'] = user_info.password
+        user = self.request.user
+        user_info = user.profile
+        initial['name'] = user.first_name
+        initial['email'] = user.email
+
         return initial
+
+    def form_valid(self, form):
+        user = User.objects.filter(username=self.request.user.username).first()
+        if form.cleaned_data.get('password') != "":
+            user.set_password(form.cleaned_data.get('password'))
+        user.first_name = form.cleaned_data.get('name')
+        user.email = form.cleaned_data.get('email')
+        user.save()
+
+        return super(UserInfoView, self).form_valid(form)
 

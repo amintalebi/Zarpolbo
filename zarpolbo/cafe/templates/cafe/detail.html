@@ -17,6 +17,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script type="text/javascript" src="{% static 'typeahead.bundle.js' %}"></script>
+    <style type="text/css">
+
+
+        .carousel {
+            background: #2f4357;
+            margin-top: 20px;
+        }
+
+        .carousel .item {
+            min-height: 300px; /* Prevent carousel from being distorted if for some reason image doesn't load */
+        }
+
+        img {
+            border-radius: 100%;
+        }
+
+        body {
+            background-color: bisque;
+        }
+
+        .carousel .item img {
+            margin: 0 auto; /* Align slide image horizontally center */
+        }
+
+        .bs-example {
+            margin: 20px;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-inverse">
@@ -53,8 +81,10 @@
     </div>
 </nav>
 
-<h1 class="text" style="width: 15%; margin-left: 40%">{{ cafe.name }}</h1>
-  <img src="{{ cafe.main_image_url }}" alt="Avatar" class="image" style="margin-left: 40%; margin-bottom: 5%;">
+<h1 class="text" style="width: 15%; margin-left: 40%;">{{ cafe.name }}</h1>
+<img src="{{ cafe.main_image_url }}" alt="Avatar" class="image" style="margin-left: 40%; margin-bottom: 5%; border-radius: 1em; border-width: 5px; border-color: #4CAF50;">
+
+
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
     <ol class="carousel-indicators">
@@ -78,17 +108,17 @@
     </div>
 
     <!-- Left and right controls -->
-    <a class="left carousel-control" href="#myCarousel" data-slide="prev" style=" margin-left: 30%;">
+    <a class="left carousel-control" href="#myCarousel" data-slide="prev" style=" margin-left: 0%;">
         <span class="glyphicon glyphicon-chevron-left"></span>
         <span class="sr-only">Previous</span>
     </a>
-    <a class="right carousel-control" href="#myCarousel" data-slide="next" style="margin-right: 30%">
+    <a class="right carousel-control" href="#myCarousel" data-slide="next" style="margin-right: 0%">
         <span class="glyphicon glyphicon-chevron-right"></span>
         <span class="sr-only">Next</span>
     </a>
 </div>
 <div class="middle" style="margin-left: 40%; margin-top: 2%">
-            <div class="h-text">{{ cafe.description }}</div>
-        </div>
+    <div class="h-text">{{ cafe.description }}</div>
+</div>
 </body>
 </html>

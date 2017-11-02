@@ -73,8 +73,13 @@
 
 
         <ul class="nav navbar-nav navbar-right">
-            <li><a href="/account/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="/account/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% if request.user.is_authenticated %}
+                <li><a href="/account/profile/"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                <li><a href="/account/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
+            {% else %}
+                <li><a href="/account/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                <li><a href="/account/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            {% endif %}
         </ul>
 
     </div>

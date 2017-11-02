@@ -74,7 +74,7 @@
 
         <ul class="nav navbar-nav navbar-right">
             {% if request.user.is_authenticated %}
-                <li><a href="/account/profile/"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
+                <li><a href="/account/profile/{{ request.user.username }}/"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
                 <li><a href="/account/logout/"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
             {% else %}
                 <li><a href="/account/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -131,7 +131,7 @@
 </div>
 <div class="container" id="container">
     {% for cafe in cafes_list %}
-        <h1 class="text">{{ cafe.name }}</h1>
+        <a href="/cafe/detail/{{ cafe.id }}/"> <h1 class="text">{{ cafe.name }}</h1></a>
         <img src="{{ cafe.main_image_url }}" alt="Avatar" class="image">
         <div class="middle">
             <div class="h-text">{{ cafe.description }}</div>

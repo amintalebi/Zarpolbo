@@ -65,7 +65,14 @@
                     <p style=" color: red;">{{ form.username.errors.as_text }}</p>
                 </div>
             </div>
-
+            <div class="control-group">
+                <!-- Username -->
+                <label class="control-label" for="username">Name</label>
+                <div class="controls">
+                    {{ form.name}}
+                    <p style=" color: red;">{{ form.name.errors.as_text }}</p>
+                </div>
+            </div>
             <div class="control-group">
                 <!-- E-mail -->
                 <label class="control-label" for="email">E-mail</label>

@@ -1,20 +1,24 @@
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from django.views.generic import FormView
+from django.views.generic import FormView, UpdateView
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 
-from account.forms import RegisterForm
+from account.forms import RegisterForm, UserInfoForm
 from django.contrib.auth.views import login as django_login_view
+
+from account.models import UserInfo
 
 
 def register_view(request):
     # Should not be logged in
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/cafe/')
 
     if request.method == "POST":
         form = RegisterForm(request.POST)
@@ -35,7 +39,7 @@ def register_view(request):
 
 
 class LoginView(FormView):
-    success_url = '/'
+    success_url = '/cafe/'
     form_class = AuthenticationForm
     template_name = 'account/login.html'
 
@@ -52,4 +56,44 @@ class LoginView(FormView):
 @login_required(login_url='/account/login/')
 def logout_view(request):
     logout(request)
-    return redirect('/')
+    return redirect('/cafe/')
+
+
+def profile(request, username):
+    template_name = 'account/profile.html'
+
+    if User.objects.filter(username__contains=username).count() == 0:
+        return redirect("/cafe/")
+    else:
+        user  = User.objects.filter(username__contains=username).first()
+
+    context = {
+        'user' : user
+    }
+    return render(request, template_name, context)
+
+
+class UpdateUserInfoView(LoginRequiredMixin, UpdateView):
+    model = UserInfo
+    form_class = UserInfoForm
+    template_name = 'account/edit_profile.html'
+    success_url = '/cafe/'
+
+    def get_object(self, queryset=None):
+        if self.request.user.additionals.count() > 0:
+            return self.request.user.additionals.all()[0]
+        return None
+
+class UserInfoView(LoginRequiredMixin, FormView):
+    form_class = UserInfoForm
+    template_name = 'account/edit_profile.html'
+
+    def get_initial(self):
+        initial = super(UserInfoView, self).get_initial()
+        if self.request.user.additionals.count() > 0:
+            user_info = self.request.user.additionals.all()[0]
+            initial['name'] = user_info.name
+            initial['email'] = user_info.email
+            initial['password'] = user_info.password
+        return initial
+

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+
+</head>
+<body>
+{% csrf_token %}
+<div class="panel" style="padding: 2%">
+
+    {% csrf_token %}
+
+    <div id="legend">
+        <legend class="">Edit</legend>
+    </div>
+    <form method="post" class="panels">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="exampleFormControlInput1">name</label>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">email</label>
+            {{ form.email }}
+        </div>
+        <div>
+            <label for="exampleFormControlInput1">password</label>
+            {{ form.password }}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+</body>
+</html>

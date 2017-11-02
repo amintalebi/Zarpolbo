@@ -91,8 +91,12 @@ class UserInfoView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         user = User.objects.filter(username=self.request.user.username).first()
-        if form.cleaned_data.get('password') != "":
-            user.set_password(form.cleaned_data.get('password'))
+        if form.cleaned_data.get('password1') != "":
+            if form.cleaned_data.get('password1') == form.cleaned_data.get('password2'):
+                user.set_password(form.cleaned_data.get('password1'))
+            else:
+                form.add_error('password2', 'The passwords don\'t match')
+                return super(UserInfoView, self).form_invalid(form)
         user.first_name = form.cleaned_data.get('name')
         user.email = form.cleaned_data.get('email')
         user.save()

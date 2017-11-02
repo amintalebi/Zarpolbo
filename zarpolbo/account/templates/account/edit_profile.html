@@ -53,27 +53,58 @@
 
 <div class="panel" style="padding: 2%">
 
-    {% csrf_token %}
 
-    <div id="legend">
-        <legend class="">Edit</legend>
-    </div>
     <form method="post" class="panels">
         {% csrf_token %}
-        {{ form }}
-{#        <div class="form-group">#}
-{#            <label for="exampleFormControlInput1">name</label>#}
-{#            {{ form.name }}#}
-{#        </div>#}
-{#        <div class="form-group">#}
-{#            <label for="exampleFormControlTextarea1">email</label>#}
-{#            {{ form.email }}#}
-{#        </div>#}
-{#        <div>#}
-{#            <label for="exampleFormControlInput1">password</label>#}
-{#            {{ form.password }}#}
-{#        </div>#}
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <fieldset>
+            <div id="legend">
+                <legend class="">Edit profile</legend>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="name">Name</label>
+                <div class="controls">
+                    {{ form.name}}
+                    <p style=" color: red;">{{ form.name.errors.as_text }}</p>
+                </div>
+            </div>
+            <div class="control-group">
+                <!-- E-mail -->
+                <label class="control-label" for="email">E-mail</label>
+                <div class="controls">
+                    {{ form.email }}
+                    <p class="help-block">Please provide your E-mail</p>
+                    <p style=" color: red;">{{ form.email.errors.as_text }}</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <!-- Password-->
+                <label class="control-label" for="password">Password</label>
+                <div class="controls">
+                    {{ form.password1 }}
+                    <p class="help-block">Keep this field empty if you don't want to change password</p>
+                    <p style=" color: red;">{{ form.password1.errors.as_text }}</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <!-- Password -->
+                <label class="control-label" for="password_confirm">Password (Confirm)</label>
+                <div class="controls">
+                    {{ form.password2 }}
+                    <p class="help-block">Please confirm password</p>
+                    <p style=" color: red;">{{ form.password2.errors.as_text }}</p>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <!-- Button -->
+                <div class="controls">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+
     </form>
 </div>
 </body>

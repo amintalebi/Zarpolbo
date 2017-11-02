@@ -3,7 +3,7 @@ $("#search-form").on('submit', function (e) {
     search();
 });
 
-$(".tt-suggestion").on('click', function (e) {
+$(".tt-susggestion").on('click', function (e) {
     e.preventDefault();
     search();
 });

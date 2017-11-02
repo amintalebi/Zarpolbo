@@ -45,8 +45,6 @@ function loadMap(data)
     for (cafe of data)
         locations.push([cafe.fields.name, cafe.fields.latitude, cafe.fields.longitude]);
 
-    alert(locations);
-
     var map = new google.maps.Map(document.getElementById('mapp'), {
         zoom: 10,
         center: new google.maps.LatLng(latSum / cnt, lngSum / cnt),

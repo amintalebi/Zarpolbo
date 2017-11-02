@@ -1,32 +1,142 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+
     <meta charset="UTF-8">
     <title>Home</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- google maps api -->
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
+    <link href="{% static "style.css" %}" type="text/css" rel="stylesheet">
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script  type="text/javascript" src="{% static 'typeahead.bundle.js' %}"></script>
+
+    <script type="text/javascript" >
+    $(document).ready(function(){
+    // Defining the local dataset
+        let cafes = [
+            {% for cafe in cafes_list %}
+                "{{ cafe.name|safe }}"{%  if not forloop.last %}, {% endif %}
+            {% endfor %}
+        ];
+
+        // Constructing the suggestion engine
+        cafes = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: cafes
+        });
+
+        // Initializing the typeahead
+    $('.typeahead').typeahead({
+        hint: true,
+        highlight: true, /* Enable substring highlighting */
+        minLength: 1 /* Specify minimum characters required for showing result */
+    },
+    {
+        name: 'cafes',
+        source: cafes
+    });
+});
+</script>
+
+
 </head>
 <body>
 <nav class="navbar navbar-inverse">
     <div class="container-fluid">
+
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Cafe Yab</a>
         </div>
         <ul class="nav navbar-nav">
             <li class="active"><a href='{% url 'cafe:index' %}'>Home</a></li>
         </ul>
+
+
+        <form id="search-form" class="navbar-form navbar-left" method="post" action="{% url 'cafe:search' %}">
+            <div class="form-group">
+                <input type="text" class="typeahead tt-query"  placeholder="Search" id="search-input" name="q"
+                       autocomplete="off" spellcheck="false"/>
+            </div>
+            <input type="submit" class="btn btn-default" value="submit"/>
+        </form>
+
+
         <ul class="nav navbar-nav navbar-right">
             <li><a href="/account/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
             <li><a href="/account/login/"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
         </ul>
+
     </div>
 </nav>
+
+
+<div style="clear:both ; position: fixed ; right: 0px ; width: 48% ; height: 80%">
+    <div id="mapp" class="fixx" style="position: fixed; right: 0px; width: 100%; height: 100%"></div>
+    <script type="text/javascript">
+
+        var latSum = 0, lngSum = 0, cnt = 0;
+
+        {% for cafe in cafes_list %}
+            latSum += {{ cafe.latitude }};
+            lngSum += {{ cafe.longitude }};
+            cnt++;
+        {% endfor %}
+
+
+
+        var locations = [
+            {% for cafe in cafes_list %}
+                ['{{ cafe.name}}', {{ cafe.latitude }}, {{ cafe.longitude }}],
+            {% endfor %}
+        ];
+
+        var map = new google.maps.Map(document.getElementById('mapp'), {
+            zoom: 10,
+            center: new google.maps.LatLng(latSum / cnt, lngSum / cnt),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                map: map
+            });
+
+            google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                return function () {
+                    infowindow.setContent(locations[i][0]);
+                    infowindow.open(map, marker);
+                }
+            })(marker, i));
+        }
+    </script>
+<script src="{% static 'script.js' %}"></script>
+</div>
+<div class="container" id="container">
+    {% for cafe in cafes_list %}
+        <h1 class="text">{{ cafe.name }}</h1>
+        <img src="{{ cafe.main_image_url }}" alt="Avatar" class="image">
+        <div class="middle">
+            <div class="h-text">{{ cafe.description }}</div>
+        </div>
+        <br/>
+    {% endfor %}
+</div>
 </body>
 </html>
 

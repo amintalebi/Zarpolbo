@@ -89,7 +89,6 @@
 <div style="clear:both ; position: fixed ; right: 0px ; width: 48% ; height: 80%">
     <div id="mapp" class="fixx" style="position: fixed; right: 0px; width: 100%; height: 100%"></div>
     <script type="text/javascript">
-
         var latSum = 0, lngSum = 0, cnt = 0;
 
         {% for cafe in cafes_list %}
@@ -97,8 +96,6 @@
             lngSum += {{ cafe.longitude }};
             cnt++;
         {% endfor %}
-
-
 
         var locations = [
             {% for cafe in cafes_list %}

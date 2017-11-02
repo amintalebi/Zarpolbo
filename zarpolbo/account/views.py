@@ -37,7 +37,7 @@ def register_view(request):
 class LoginView(FormView):
     success_url = '/'
     form_class = AuthenticationForm
-    template_name = 'account/register.html'
+    template_name = 'account/login.html'
 
     def form_valid(self, form):
         username = form.cleaned_data.get('username')
